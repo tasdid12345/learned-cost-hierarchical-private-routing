@@ -24,6 +24,33 @@ python analysis.py
 ## Results
 Results are written to `results.json` (and a chart to `figures/`).
 
+## Results (latest run)
+
+On a synthetic grid-city traffic simulation (840 test trips), a standard hierarchical region-level private route planner with static average costs reached 6.61% mean extra travel time versus the non-private Dijkstra optimum, while my version with LightGBM time-aware coarse costs reached 1.74% (std 0.02) on the same test trips.
+
+| Metric | Value |
+|---|---|
+| baseline_score | 6.613 |
+| improved_score | 1.745 |
+| baseline_score_std | 0 |
+| improved_score_std | 0.02104 |
+| improvement | 4.869 |
+| baseline_within10pct | 80.6 |
+| improved_within10pct | 95.36 |
+| improved_within10pct_std | 0.0972 |
+| baseline_p95_excess | 35.99 |
+| improved_p95_excess | 8.832 |
+| improved_p95_excess_std | 0.08703 |
+| baseline_edge_rmse | 0.7366 |
+| improved_edge_rmse | 0.3523 |
+| n_test_trips | 840 |
+| best_num_leaves | 15 |
+| cv_rmse_ratio | 0.3309 |
+
+Run on 2026-10-11. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: Rows count edge-time observations (days x slots x edges); LightGBM trains on a 250-edge sample per snapshot. Device is assumed to know true current costs inside the corridor for its local legs (same for both planners). Probes (60 random edges per snapshot) are only used by the improved model. The baseline is deterministic (std 0); LightGBM seeds 42-44 vary. Hyperparameters chosen by day-grouped CV on training days only. Results depend on the synthetic simulator's design; not the paper's dataset or method.
+
 ## Reference
 
 This project is motivated by the following paper:
