@@ -1,0 +1,36 @@
+{
+  "question": "In a simulated fast-changing city, does a hierarchical privacy-preserving route planner with a learned time-aware coarse cost model give routes closer to the non-private optimum than one with static coarse costs, at the same privacy level?",
+  "method": "30x30 grid city with time-of-day, moving hotspots and noise; train/test days with different hotspot paths; server sees only 5x5-block regions of origin/destination, device plans exact legs in the chosen region corridor; coarse region costs from static averages (baseline) vs LightGBM using time, location and sparse probes (improved).",
+  "dataset": {
+    "name": "Synthetic grid-city traffic simulation",
+    "source_url": "generated in script (networkx, numpy); no download",
+    "n_rows": 2088000,
+    "n_train": 1503360,
+    "n_test": 584640,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "Mean percentage extra travel time vs non-private Dijkstra on true current costs",
+  "higher_is_better": false,
+  "baseline": "Two-level hierarchical private planner; coarse region-to-region costs from static per-edge historical averages.",
+  "improved": "Same hierarchy and disclosed info; coarse costs from a LightGBM model predicting current edge times from time of day, location and sparse recent probes.",
+  "metrics": {
+    "baseline_score": 6.613373062489389,
+    "improved_score": 1.7446332642797724,
+    "baseline_score_std": 0.0,
+    "improved_score_std": 0.02103720025502954,
+    "improvement": 4.868739798209616,
+    "baseline_within10pct": 80.5952380952381,
+    "improved_within10pct": 95.35714285714285,
+    "improved_within10pct_std": 0.09720197391997429,
+    "baseline_p95_excess": 35.98770596451615,
+    "improved_p95_excess": 8.832270234613597,
+    "improved_p95_excess_std": 0.08703419966184217,
+    "baseline_edge_rmse": 0.7366426070131641,
+    "improved_edge_rmse": 0.35225595879882204,
+    "n_test_trips": 840.0,
+    "best_num_leaves": 15.0,
+    "cv_rmse_ratio": 0.3308650911857095
+  },
+  "notes": "Rows count edge-time observations (days x slots x edges); LightGBM trains on a 250-edge sample per snapshot. Device is assumed to know true current costs inside the corridor for its local legs (same for both planners). Probes (60 random edges per snapshot) are only used by the improved model. The baseline is deterministic (std 0); LightGBM seeds 42-44 vary. Hyperparameters chosen by day-grouped CV on training days only. Results depend on the synthetic simulator's design; not the paper's dataset or method."
+}
